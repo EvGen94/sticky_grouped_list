@@ -63,6 +63,9 @@ class StickyGroupedListView<T, E> extends StatefulWidget {
   /// Whether the group headers float over the list or occupy their own space.
   final bool floatingHeader;
 
+  /// Whether the header is enabled or not.
+  final bool enableHeader;
+
   /// Background color of the sticky header.
   /// Only used if [floatingHeader] is false.
   final Color stickyHeaderBackgroundColor;
@@ -151,6 +154,7 @@ class StickyGroupedListView<T, E> extends StatefulWidget {
     this.order = StickyGroupedListOrder.ASC,
     this.separator = const SizedBox.shrink(),
     this.floatingHeader = false,
+    this.enableHeader = false,
     this.stickyHeaderBackgroundColor = const Color(0xffF7F7F7),
     this.scrollDirection = Axis.vertical,
     this.itemScrollController,
@@ -278,11 +282,12 @@ class StickyGroupedListViewState<T, E>
             return _buildItem(context, actualIndex);
           },
         ),
-        StreamBuilder<int>(
-          stream: _streamController.stream,
-          initialData: _topElementIndex,
-          builder: (_, snapshot) => _showFixedGroupHeader(snapshot.data!),
-        )
+        if (widget.enableHeader)
+          StreamBuilder<int>(
+            stream: _streamController.stream,
+            initialData: _topElementIndex,
+            builder: (_, snapshot) => _showFixedGroupHeader(snapshot.data!),
+          )
       ],
     );
   }
